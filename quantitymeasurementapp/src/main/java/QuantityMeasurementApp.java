@@ -2,13 +2,13 @@ public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
 
-        Quantity yard = new Quantity(1, Unit.YARDS);
-        Quantity feet = new Quantity(3, Unit.FEET);
-        Quantity inch = new Quantity(36, Unit.INCH);
-        Quantity cm = new Quantity(1, Unit.CENTIMETER);
+        QuantityLength yard = new QuantityLength(1, LengthUnit.YARDS);
+        QuantityLength feet = new QuantityLength(3, LengthUnit.FEET);
+        QuantityLength inch = new QuantityLength(36, LengthUnit.INCH);
+        QuantityLength cm = new QuantityLength(1, LengthUnit.CENTIMETER);
 
         System.out.println(yard.equals(feet));
         System.out.println(yard.equals(inch));
-        System.out.println(cm.equals(new Quantity(0.393701, Unit.INCH)));
+        System.out.println(cm.equals(new QuantityLength(0.393701, LengthUnit.INCH)));
     }
 }

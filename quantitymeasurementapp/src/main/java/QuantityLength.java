@@ -1,10 +1,11 @@
 import java.util.Objects;
 
-public class Quantity {
+public class QuantityLength {
     private final double value;
-    private final Unit unit;
+    private final LengthUnit unit;
 
-    public Quantity(double value, Unit unit){
+    public QuantityLength(double value, LengthUnit unit){
+        if (unit == null) throw new IllegalArgumentException("Unit cannot be null");
         this.value = value;
         this.unit = unit;
     }
@@ -18,7 +19,7 @@ public class Quantity {
         if(this == obj) return true;
         if(obj == null || getClass() != obj.getClass()) return false;
 
-        Quantity other = (Quantity) obj;
+        QuantityLength other = (QuantityLength) obj;
         return Double.compare(this.toBaseValue(), other.toBaseValue()) == 0;
     }
 
