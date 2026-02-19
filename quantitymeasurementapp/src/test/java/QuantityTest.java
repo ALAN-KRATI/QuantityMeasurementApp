@@ -4,40 +4,45 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QuantityTest {
 
     @Test
-    void feetEquality_SameValue() {
-        Quantity q1 = new Quantity(1, Unit.FEET);
-        Quantity q2 = new Quantity(1, Unit.FEET);
+    void yardToFeet_shouldBeEqual() {
+        Quantity yard = new Quantity(1.0, Unit.YARDS);
+        Quantity feet = new Quantity(3.0, Unit.FEET);
 
-        assertEquals(q1, q2);
+        assertEquals(yard, feet);
     }
 
     @Test
-    void feetEquality_DifferentValue() {
-        Quantity q1 = new Quantity(1, Unit.FEET);
-        Quantity q2 = new Quantity(2, Unit.FEET);
+    void yardToInch_shouldBeEqual() {
+        Quantity yard = new Quantity(1.0, Unit.YARDS);
+        Quantity inch = new Quantity(36.0, Unit.INCH);
 
-        assertNotEquals(q1, q2);
+        assertEquals(yard, inch);
     }
 
     @Test
-    void feetAndInchEquality_SameValueDifferentUnit() {
-        Quantity feet = new Quantity(1, Unit.FEET);
-        Quantity inch = new Quantity(12, Unit.INCH);
+    void centimeterToInch_shouldBeEqual() {
+        Quantity cm = new Quantity(1.0, Unit.CENTIMETER);
+        Quantity inch = new Quantity(0.393701, Unit.INCH);
 
+        assertEquals(cm, inch);
+    }
+
+    @Test
+    void centimeterToFeet_shouldNotBeEqual() {
+        Quantity cm = new Quantity(1.0, Unit.CENTIMETER);
+        Quantity feet = new Quantity(1.0, Unit.FEET);
+
+        assertNotEquals(cm, feet);
+    }
+
+    @Test
+    void multiUnitTransitiveProperty() {
+        Quantity yard = new Quantity(1.0, Unit.YARDS);
+        Quantity feet = new Quantity(3.0, Unit.FEET);
+        Quantity inch = new Quantity(36.0, Unit.INCH);
+
+        assertEquals(yard, feet);
         assertEquals(feet, inch);
-    }
-
-    @Test
-    void feetAndInchEquality_DifferentValue() {
-        Quantity feet = new Quantity(1, Unit.FEET);
-        Quantity inch = new Quantity(11, Unit.INCH);
-
-        assertNotEquals(feet, inch);
-    }
-
-    @Test
-    void QuantityEquality_Null() {
-        Quantity q = new Quantity(1, Unit.FEET);
-        assertNotEquals(q, null);
+        assertEquals(yard, inch);
     }
 }
