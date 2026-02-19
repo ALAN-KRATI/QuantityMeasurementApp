@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="QuantityTest" time="0.048" tests="5" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="QuantityLengthTest" time="0.056" tests="8" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="24"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IN"/>
     <property name="sun.boot.library.path" value="D:\java\jdk-24.0.1\bin"/>
-    <property name="sun.java.command" value="C:\Users\alank\AppData\Local\Temp\surefire12948301760462668135\surefirebooter-20260219102118785_3.jar C:\Users\alank\AppData\Local\Temp\surefire12948301760462668135 2026-02-19T10-21-18_463-jvmRun1 surefire-20260219102118785_1tmp surefire_0-20260219102118785_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\alank\AppData\Local\Temp\surefire2122938581012293730\surefirebooter-20260219122608019_3.jar C:\Users\alank\AppData\Local\Temp\surefire2122938581012293730 2026-02-19T12-26-07_894-jvmRun1 surefire-20260219122608019_1tmp surefire_0-20260219122608019_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="D:\QuantityMeasurementApp\quantitymeasurementapp\target\test-classes;D:\QuantityMeasurementApp\quantitymeasurementapp\target\classes;C:\Users\alank\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.0\junit-jupiter-api-5.11.0.jar;C:\Users\alank\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\alank\.m2\repository\org\junit\platform\junit-platform-commons\1.11.0\junit-platform-commons-1.11.0.jar;C:\Users\alank\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\alank\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.11.0\junit-jupiter-params-5.11.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\alank\AppData\Local\Temp\surefire12948301760462668135\surefirebooter-20260219102118785_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\alank\AppData\Local\Temp\surefire2122938581012293730\surefirebooter-20260219122608019_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="24.0.1+9-30"/>
@@ -58,9 +58,12 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="68.0"/>
   </properties>
-  <testcase name="feetAndInchEquality_DifferentValue" classname="QuantityTest" time="0.023"/>
-  <testcase name="feetEquality_DifferentValue" classname="QuantityTest" time="0.001"/>
-  <testcase name="QuantityEquality_Null" classname="QuantityTest" time="0.0"/>
-  <testcase name="feetEquality_SameValue" classname="QuantityTest" time="0.001"/>
-  <testcase name="feetAndInchEquality_SameValueDifferentUnit" classname="QuantityTest" time="0.001"/>
+  <testcase name="testEquality_InchToInch_SameValue" classname="QuantityLengthTest" time="0.021"/>
+  <testcase name="testEquality_FeetToFeet_DifferentValue" classname="QuantityLengthTest" time="0.001"/>
+  <testcase name="testEquality_InchToFeet_EquivalentValue" classname="QuantityLengthTest" time="0.001"/>
+  <testcase name="testEquality_FeetToFeet_SameValue" classname="QuantityLengthTest" time="0.001"/>
+  <testcase name="testEquality_SameReference" classname="QuantityLengthTest" time="0.002"/>
+  <testcase name="testEquality_NullComparison" classname="QuantityLengthTest" time="0.001"/>
+  <testcase name="testEquality_InchToInch_DifferentValue" classname="QuantityLengthTest" time="0.001"/>
+  <testcase name="testEquality_InvalidUnit" classname="QuantityLengthTest" time="0.001"/>
 </testsuite>

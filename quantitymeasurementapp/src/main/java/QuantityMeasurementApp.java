@@ -1,18 +1,14 @@
 public class QuantityMeasurementApp {
 
     public static void main(String[] args) {
-        Quantity f1 = new Quantity(1.0, Unit.FEET);
-        Quantity f2 = new Quantity(1.0, Unit.FEET);
+        QuantityLength f1 = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength inch = new QuantityLength(12.0, LengthUnit.INCH);
 
+        QuantityLength f2 = new QuantityLength(2.0, LengthUnit.FEET);
+        QuantityLength inch1 = new QuantityLength(24.0, LengthUnit.INCH);
+
+        System.out.println(f1.equals(inch));
+        System.out.println(f2.equals(inch1));
         System.out.println(f1.equals(f2));
-
-        Quantity f = new Quantity(1.0, Unit.FEET);
-        Quantity inch = new Quantity(12.0, Unit.INCH);
-
-        System.out.println(f.equals(inch));
-
-        Quantity inch1 = new Quantity(11.0, Unit.INCH);
-
-        System.out.println(f.equals(inch1));
     }
 }
