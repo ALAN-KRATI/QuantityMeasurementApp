@@ -1,14 +1,23 @@
 public class QuantityMeasurementApp {
 
+    public static void demonstrateLengthConversion(double value, LengthUnit from, LengthUnit to) {
+        double result = QuantityLength.convert(value, from, to);
+        System.out.println(value + " " + from + " = " + result + " " + to);
+    }
+
+    public static void demonstrateLengthConversion(QuantityLength q, LengthUnit to) {
+        QuantityLength converted = q.convertTo(to);
+        System.out.println(q + " = " + converted);
+    }
+
     public static void main(String[] args) {
 
-        Quantity yard = new Quantity(1, Unit.YARDS);
-        Quantity feet = new Quantity(3, Unit.FEET);
-        Quantity inch = new Quantity(36, Unit.INCH);
-        Quantity cm = new Quantity(1, Unit.CENTIMETER);
+        QuantityMeasurementApp.demonstrateLengthConversion(1.0, LengthUnit.FEET, LengthUnit.INCH);
+        QuantityMeasurementApp.demonstrateLengthConversion(3.0, LengthUnit.YARDS, LengthUnit.FEET);
+        QuantityMeasurementApp.demonstrateLengthConversion(36.0, LengthUnit.INCH, LengthUnit.YARDS);
+        QuantityMeasurementApp.demonstrateLengthConversion(1.0, LengthUnit.CENTIMETER, LengthUnit.INCH);
 
-        System.out.println(yard.equals(feet));
-        System.out.println(yard.equals(inch));
-        System.out.println(cm.equals(new Quantity(0.393701, Unit.INCH)));
+        QuantityLength q = new QuantityLength(2.0, LengthUnit.YARDS);
+        QuantityMeasurementApp.demonstrateLengthConversion(q, LengthUnit.INCH);
     }
 }
