@@ -3,18 +3,29 @@ import java.util.Objects;
 public class QuantityLength {
     private final double value;
     private final LengthUnit unit;
+
     private static final double EPSILON = 0.001;
 
     public QuantityLength(double value, LengthUnit unit){
         if(unit == null) throw new IllegalArgumentException("Unit cannot be null");
-
         if(!Double.isFinite(value)) throw new IllegalArgumentException("Invalid number");
+
         this.value = value;
         this.unit = unit;
     }
 
     private double toBaseValue(){
         return unit.toFeet(value);
+    }
+
+     public QuantityLength convertTo(LengthUnit targetUnit) {
+
+        double base = this.toBaseValue();
+        double converted = targetUnit.fromFeet(base);
+
+        double rounded = Math.round(converted * 1000.0) / 1000.0;
+
+        return new QuantityLength(rounded, targetUnit);
     }
 
     public QuantityLength add(QuantityLength q){
