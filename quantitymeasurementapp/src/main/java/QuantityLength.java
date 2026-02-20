@@ -3,8 +3,12 @@ import java.util.Objects;
 public class QuantityLength {
     private final double value;
     private final LengthUnit unit;
+    private static final double EPSILON = 0.001;
 
     public QuantityLength(double value, LengthUnit unit){
+        if(unit == null) throw new IllegalArgumentException("Unit cannot be null");
+
+        if(!Double.isFinite(value)) throw new IllegalArgumentException("Invalid number");
         this.value = value;
         this.unit = unit;
     }
@@ -14,16 +18,18 @@ public class QuantityLength {
     }
 
     public QuantityLength add(QuantityLength q){
-        if(q == null){
-            throw new IllegalArgumentException("Cannot add null quantity!");
-        }
+       return add(this, q, this.unit);
+    }
 
-        double first = this.toBaseValue();
-        double second = q.toBaseValue();
-        double sum = first + second;
-        double ans = this.unit.fromFeet(sum);
+    public static QuantityLength add(QuantityLength q1, QuantityLength q2, LengthUnit targetUnit) throws IllegalArgumentException{
+        if(q1 == null || q2 == null) throw new IllegalArgumentException("Quantity cannot be null");
+        if(targetUnit == null) throw new IllegalArgumentException("Target unit cannot be null");
 
-        return new QuantityLength(ans, this.unit);
+        double sum = q1.toBaseValue() + q2.toBaseValue();
+        double ans = targetUnit.fromFeet(sum);
+        double rounded = Math.round(ans * 1000.0) / 1000.0;
+
+        return new QuantityLength(rounded, targetUnit);
     }
 
     @Override
@@ -32,16 +38,17 @@ public class QuantityLength {
         if(obj == null || getClass() != obj.getClass()) return false;
 
         QuantityLength other = (QuantityLength) obj;
-        return Double.compare(this.toBaseValue(), other.toBaseValue()) == 0;
+        return Math.abs(this.toBaseValue() - other.toBaseValue()) < EPSILON;
     }
 
     @Override
     public int hashCode(){
-        return Objects.hash(toBaseValue());
+        long rounded = Math.round(toBaseValue() / EPSILON);
+        return Objects.hash(rounded);
     }
 
     @Override
     public String toString(){
-        return value + " " + unit;
+        return String.format("%.3f %s", value, unit);
     }
 }
