@@ -1,12 +1,12 @@
 import java.util.Objects;
 
-public class QuantityLength {
+public class Length {
     private final double value;
     private final LengthUnit unit;
 
     private static final double EPSILON = 0.001;
 
-    public QuantityLength(double value, LengthUnit unit){
+    public Length(double value, LengthUnit unit){
         if(unit == null) throw new IllegalArgumentException("Unit cannot be null");
         if(!Double.isFinite(value)) throw new IllegalArgumentException("Invalid number");
 
@@ -18,21 +18,21 @@ public class QuantityLength {
         return unit.toFeet(value);
     }
 
-     public QuantityLength convertTo(LengthUnit targetUnit) {
+     public Length convertTo(LengthUnit targetUnit) {
 
         double base = this.toBaseValue();
         double converted = targetUnit.fromFeet(base);
 
         double rounded = Math.round(converted * 1000.0) / 1000.0;
 
-        return new QuantityLength(rounded, targetUnit);
+        return new Length(rounded, targetUnit);
     }
 
-    public QuantityLength add(QuantityLength q){
+    public Length add(Length q){
        return add(this, q, this.unit);
     }
 
-    public static QuantityLength add(QuantityLength q1, QuantityLength q2, LengthUnit targetUnit) throws IllegalArgumentException{
+    public static Length add(Length q1, Length q2, LengthUnit targetUnit) throws IllegalArgumentException{
         if(q1 == null || q2 == null) throw new IllegalArgumentException("Quantity cannot be null");
         if(targetUnit == null) throw new IllegalArgumentException("Target unit cannot be null");
 
@@ -40,7 +40,7 @@ public class QuantityLength {
         double ans = targetUnit.fromFeet(sum);
         double rounded = Math.round(ans * 1000.0) / 1000.0;
 
-        return new QuantityLength(rounded, targetUnit);
+        return new Length(rounded, targetUnit);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class QuantityLength {
         if(this == obj) return true;
         if(obj == null || getClass() != obj.getClass()) return false;
 
-        QuantityLength other = (QuantityLength) obj;
+        Length other = (Length) obj;
         return Math.abs(this.toBaseValue() - other.toBaseValue()) < EPSILON;
     }
 
