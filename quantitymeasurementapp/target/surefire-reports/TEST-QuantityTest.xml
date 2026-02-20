@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="QuantityTest" time="0.056" tests="11" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="QuantityTest" time="0.051" tests="4" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="24"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -15,7 +15,7 @@
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="user.country" value="IN"/>
     <property name="sun.boot.library.path" value="D:\java\jdk-24.0.1\bin"/>
-    <property name="sun.java.command" value="C:\Users\alank\AppData\Local\Temp\surefire15313359877293628539\surefirebooter-20260219133803096_3.jar C:\Users\alank\AppData\Local\Temp\surefire15313359877293628539 2026-02-19T13-38-02_996-jvmRun1 surefire-20260219133803096_1tmp surefire_0-20260219133803096_2tmp"/>
+    <property name="sun.java.command" value="C:\Users\alank\AppData\Local\Temp\surefire2111705246263822022\surefirebooter-20260220112212229_3.jar C:\Users\alank\AppData\Local\Temp\surefire2111705246263822022 2026-02-20T11-22-12_141-jvmRun1 surefire-20260220112212229_1tmp surefire_0-20260220112212229_2tmp"/>
     <property name="jdk.debug" value="release"/>
     <property name="surefire.test.class.path" value="D:\QuantityMeasurementApp\quantitymeasurementapp\target\test-classes;D:\QuantityMeasurementApp\quantitymeasurementapp\target\classes;C:\Users\alank\.m2\repository\org\junit\jupiter\junit-jupiter-api\5.11.0\junit-jupiter-api-5.11.0.jar;C:\Users\alank\.m2\repository\org\opentest4j\opentest4j\1.3.0\opentest4j-1.3.0.jar;C:\Users\alank\.m2\repository\org\junit\platform\junit-platform-commons\1.11.0\junit-platform-commons-1.11.0.jar;C:\Users\alank\.m2\repository\org\apiguardian\apiguardian-api\1.1.2\apiguardian-api-1.1.2.jar;C:\Users\alank\.m2\repository\org\junit\jupiter\junit-jupiter-params\5.11.0\junit-jupiter-params-5.11.0.jar;"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -30,7 +30,7 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="surefire.real.class.path" value="C:\Users\alank\AppData\Local\Temp\surefire15313359877293628539\surefirebooter-20260219133803096_3.jar"/>
+    <property name="surefire.real.class.path" value="C:\Users\alank\AppData\Local\Temp\surefire2111705246263822022\surefirebooter-20260220112212229_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="24.0.1+9-30"/>
@@ -58,15 +58,8 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="68.0"/>
   </properties>
-  <testcase name="testConversion_FeetToYards" classname="QuantityTest" time="0.024"/>
-  <testcase name="testConversion_InvalidUnit_Throws" classname="QuantityTest" time="0.002"/>
-  <testcase name="testConversion_ZeroValue" classname="QuantityTest" time="0.001"/>
-  <testcase name="testConversion_NegativeValue" classname="QuantityTest" time="0.001"/>
-  <testcase name="testConversion_RoundTrip_PreservesValue" classname="QuantityTest" time="0.0"/>
-  <testcase name="testConversion_FeetToInches" classname="QuantityTest" time="0.001"/>
-  <testcase name="testConversion_InchesToYards" classname="QuantityTest" time="0.001"/>
-  <testcase name="testConversion_InchesToFeet" classname="QuantityTest" time="0.001"/>
-  <testcase name="testConversion_CentimetersToInches" classname="QuantityTest" time="0.0"/>
-  <testcase name="testConversion_NaNOrInfinite_Throws" classname="QuantityTest" time="0.001"/>
-  <testcase name="testConversion_YardsToInches" classname="QuantityTest" time="0.0"/>
+  <testcase name="testAddition_SameUnit_InchPlusFeet" classname="QuantityTest" time="0.022"/>
+  <testcase name="testAddition_SameUnit_InchPlusInch" classname="QuantityTest" time="0.001"/>
+  <testcase name="testAddition_SameUnit_FeetPlusFeet" classname="QuantityTest" time="0.002"/>
+  <testcase name="testAddition_SameUnit_FeetPlusInch" classname="QuantityTest" time="0.002"/>
 </testsuite>
