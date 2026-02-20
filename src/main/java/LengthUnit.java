@@ -1,4 +1,4 @@
-public enum LengthUnit {
+public enum LengthUnit implements IMeasurable{
     FEET(1.0),
     INCH(1.0/12),
     YARDS(3.0),
@@ -10,14 +10,21 @@ public enum LengthUnit {
         this.convertToFeet = convertToFeet;
     }
 
-    public double toFeet(double value){
+    @Override
+    public double convertToBase(double value){
         return value * convertToFeet;
     }
 
-    public double fromFeet(double value){
+    @Override
+    public double convertFromBase(double value){
         return value/convertToFeet;
     }
 
-    public double getFeetFactor(){ return convertToFeet; }
+    @Override
+    public double getConversionFactor(){ return convertToFeet; }
 
+    @Override
+    public String getUnitName() {
+        return this.name();
+    }
 }
