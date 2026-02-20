@@ -1,3 +1,5 @@
-QuantityMeasurementApp.class
+QuantityWeight.class
 LengthUnit.class
 QuantityLength.class
+WeightUnit.class
+QuantityMeasurementApp.class

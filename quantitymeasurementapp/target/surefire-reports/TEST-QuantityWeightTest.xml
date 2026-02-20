@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="QuantityTest" time="0.057" tests="11" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" version="3.0.1" name="QuantityWeightTest" time="0.028" tests="15" errors="0" skipped="0" failures="2">
   <properties>
     <property name="java.specification.version" value="24"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -58,15 +58,45 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="68.0"/>
   </properties>
-  <testcase name="testAddition_ExplicitTarget_SamllToLargeScale" classname="QuantityTest" time="0.022"/>
-  <testcase name="testAddition_ExplicitTarget_NegativeValues" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_Inches" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_Yards" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_Centimeters" classname="QuantityTest" time="0.0"/>
-  <testcase name="testAddition_ExplicitTarget_NullTargetUnit" classname="QuantityTest" time="0.002"/>
-  <testcase name="testAddition_ExplicitTarget_LargeToSmallScale" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_SameAsSecondOperand" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_WithZero" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_Feet" classname="QuantityTest" time="0.001"/>
-  <testcase name="testAddition_ExplicitTarget_Commutativity" classname="QuantityTest" time="0.0"/>
+  <testcase name="testEquality_GramToKilogram_EquivalentValue" classname="QuantityWeightTest" time="0.002"/>
+  <testcase name="testConversion_PoundToKilogram" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testConversion_ZeroValue" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testConversion_RoundTrip" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testConversion_NegativeValue" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testConversion_KilogramToPound" classname="QuantityWeightTest" time="0.009">
+    <failure message="expected: QuantityWeight@243c4f91&lt;2.205 POUND&gt; but was: QuantityWeight@291ae&lt;2.205 POUND&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: QuantityWeight@243c4f91<2.205 POUND> but was: QuantityWeight@291ae<2.205 POUND>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at QuantityWeightTest.testConversion_KilogramToPound(QuantityWeightTest.java:64)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></failure>
+  </testcase>
+  <testcase name="testAddition_ExplicitTargetUnit_Kilogram" classname="QuantityWeightTest" time="0.0">
+    <failure message="expected: &lt;2000.000 GRAM&gt; but was: &lt;0.002 GRAM&gt;" type="org.opentest4j.AssertionFailedError"><![CDATA[org.opentest4j.AssertionFailedError: expected: <2000.000 GRAM> but was: <0.002 GRAM>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:177)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1145)
+	at QuantityWeightTest.testAddition_ExplicitTargetUnit_Kilogram(QuantityWeightTest.java:108)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:565)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1604)
+]]></failure>
+  </testcase>
+  <testcase name="testAddition_NegativeValues" classname="QuantityWeightTest" time="0.0"/>
+  <testcase name="testEquality_KilogramToKilogram_SameValue" classname="QuantityWeightTest" time="0.002"/>
+  <testcase name="testEquality_WeightVsLength_Incompatible" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testEquality_SameReference" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testEquality_NullComparison" classname="QuantityWeightTest" time="0.0"/>
+  <testcase name="testConversion_SameUnit" classname="QuantityWeightTest" time="0.0"/>
+  <testcase name="testAddition_WithZero" classname="QuantityWeightTest" time="0.001"/>
+  <testcase name="testEquality_KilogramToKilogram_DifferentValue" classname="QuantityWeightTest" time="0.0"/>
 </testsuite>
