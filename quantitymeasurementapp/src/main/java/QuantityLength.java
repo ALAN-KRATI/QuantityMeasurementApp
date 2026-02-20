@@ -4,15 +4,7 @@ public class QuantityLength {
     private final double value;
     private final LengthUnit unit;
 
-    private static final double EPSILON = 1e-6;
-
     public QuantityLength(double value, LengthUnit unit){
-        if (unit == null)
-            throw new IllegalArgumentException("Unit cannot be null");
-
-        if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Invalid numeric value");
-
         this.value = value;
         this.unit = unit;
     }
@@ -21,21 +13,17 @@ public class QuantityLength {
         return unit.toFeet(value);
     }
 
-    public static double convert(double value, LengthUnit source, LengthUnit target) {
+    public QuantityLength add(QuantityLength q){
+        if(q == null){
+            throw new IllegalArgumentException("Cannot add null quantity!");
+        }
 
-        if (source == null || target == null)
-            throw new IllegalArgumentException("Unit cannot be null");
+        double first = this.toBaseValue();
+        double second = q.toBaseValue();
+        double sum = first + second;
+        double ans = this.unit.fromFeet(sum);
 
-        if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Invalid numeric value");
-
-        double feetValue = source.toFeet(value);
-        return target.fromFeet(feetValue);
-    }
-
-    public QuantityLength convertTo(LengthUnit targetUnit) {
-        double converted = convert(this.value, this.unit, targetUnit);
-        return new QuantityLength(converted, targetUnit);
+        return new QuantityLength(ans, this.unit);
     }
 
     @Override
@@ -44,11 +32,16 @@ public class QuantityLength {
         if(obj == null || getClass() != obj.getClass()) return false;
 
         QuantityLength other = (QuantityLength) obj;
-        return Double.compare(this.toBaseValue(), other.toBaseValue()) < EPSILON;
+        return Double.compare(this.toBaseValue(), other.toBaseValue()) == 0;
     }
 
     @Override
     public int hashCode(){
         return Objects.hash(toBaseValue());
+    }
+
+    @Override
+    public String toString(){
+        return value + " " + unit;
     }
 }
