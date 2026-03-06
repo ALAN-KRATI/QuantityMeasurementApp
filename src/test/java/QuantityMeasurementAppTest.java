@@ -39,5 +39,39 @@ public class QuantityMeasurementAppTest {
         assertTrue(f1.equals(f1));
     }
 
+<<<<<<< HEAD
 
 }
+=======
+    @Test
+    void testInchesEquality_SameValue(){
+        assertTrue(QuantityMeasurementApp.compareInches(1.0, 1.0));
+    }
+
+    @Test
+    void testInchesEquality_DifferentValue(){
+        assertFalse(QuantityMeasurementApp.compareInches(1.0, 2.0));
+    }
+
+    @Test
+    void testInchesEquality_NullComparison(){
+        QuantityMeasurementApp.Inches inch = new QuantityMeasurementApp.Inches(1.0);
+        assertFalse(inch.equals(null));
+    }
+
+    @Test 
+    void testInchesEquality_NonNumericInput(){
+        QuantityMeasurementApp.Inches i1 = new QuantityMeasurementApp.Inches(1.0);
+        String i2 = "1.0";
+        assertFalse(i1.equals(i2));
+    }
+
+    @Test
+    void testInchesEquality_SameReference(){
+        QuantityMeasurementApp.Inches i = new QuantityMeasurementApp.Inches(1.0);
+        assertTrue(i.equals(i));
+    }
+
+
+}
+>>>>>>> 86f2532 (UC2 - Also Added the code for Inhces class for equality with testcases)
