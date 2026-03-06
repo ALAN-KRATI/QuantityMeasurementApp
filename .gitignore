@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 .vscode
 .mvn
+=======
+.vscode
+.mvn
+>>>>>>> 6e6c89e (Implemented UC-1)
 /target
