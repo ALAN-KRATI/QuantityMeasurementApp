@@ -1,3 +1,5 @@
+package quantity;
+import measurable.IMeasurable;
 import java.util.Objects;
 
 public class Quantity<U extends IMeasurable> {

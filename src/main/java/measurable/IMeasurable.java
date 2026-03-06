@@ -1,3 +1,6 @@
+package measurable;
+
+
 public interface IMeasurable {
     double getConversionFactor();
     double convertToBase(double value);
@@ -8,5 +11,4 @@ public interface IMeasurable {
 
     }
 }
-
 
