@@ -1,9 +1,0 @@
-LengthUnit.class
-Quantity$ArithmeticOperation.class
-IMeasurable.class
-VolumeUnit.class
-SupportsArithmetic.class
-TemperatureUnit.class
-WeightUnit.class
-QuantityMeasurementApp.class
-Quantity.class
