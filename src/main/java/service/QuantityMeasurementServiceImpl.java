@@ -10,14 +10,14 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
     public QuantityMeasurementEntity compare(Quantity<?> q1, Quantity<?> q2) {
         try {
             boolean result = q1.equals(q2);
-
             return new QuantityMeasurementEntity(
                     "COMPARE",
                     q1.toString(),
                     q2.toString(),
                     String.valueOf(result));
 
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             return new QuantityMeasurementEntity(e.getMessage());
         }
     }

@@ -1,4 +1,3 @@
-package app;
 
 import controller.QuantityMeasurementController;
 import model.QuantityMeasurementEntity;
