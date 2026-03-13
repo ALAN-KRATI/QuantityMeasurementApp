@@ -13,7 +13,7 @@ public class QuantityMeasurementApp {
 
         IQuantityMeasurementRepository repository = new QuantityMeasurementDatabaseRepository();
 
-        QuantityMeasurementController controller = new QuantityMeasurementController(new QuantityMeasurementServiceImpl(repository));
+        QuantityMeasurementController controller = new QuantityMeasurementController(new QuantityMeasurementServiceImpl());
 
         Quantity<LengthUnit> l1 = new Quantity<>(1, LengthUnit.FEET);
         Quantity<LengthUnit> l2 = new Quantity<>(12, LengthUnit.INCH);

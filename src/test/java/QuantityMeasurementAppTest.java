@@ -1,5 +1,3 @@
-package app;
-
 import controller.QuantityMeasurementController;
 import model.QuantityMeasurementEntity;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,4 +1,4 @@
-package main.java.repository;
+package repository;
 
 import model.QuantityMeasurementEntity;
 import support.DatabaseConnection;
@@ -15,10 +15,10 @@ public class QuantityMeasurementDatabaseRepository implements IQuantityMeasureme
 
         try(Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setDouble(1, entity.getValue());
-            stmt.setString(2, entity.getUnit());
-            stmt.setString(3, entity.getOperation());
-            stmt.setDouble(4, entity.getResult());
+            stmt.setString(1, entity.getOperation());
+            stmt.setString(2, entity.getOperand1());
+            stmt.setString(3, entity.getOperand2());
+            stmt.setString(4, entity.getResult());
 
             stmt.executeUpdate();
 
