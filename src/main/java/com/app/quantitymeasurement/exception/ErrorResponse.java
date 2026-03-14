@@ -16,4 +16,9 @@ public class ErrorResponse {
         this.message = message;
     }
 
+    public LocalDateTime getTimestamp() { return timestamp; }
+    public int getStatus() { return status; }
+    public String getError() { return error; }
+    public String getMessage() { return message; }
+
 }

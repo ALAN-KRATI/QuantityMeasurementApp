@@ -51,6 +51,17 @@ public class QuantityMeasurementController {
         return service.subtract(quantity1, quantity2);
     }
 
+    @PostMapping("/convert")
+    public QuantityMeasurementEntity convert(@RequestBody QuantityInputDTO input) {
+        QuantityDTO q1 = input.getThisQuantityDTO();
+        QuantityDTO q2 = input.getThatQuantityDTO();
+
+        Quantity quantity1 = new Quantity(q1.getValue(), LengthUnit.valueOf(q1.getUnit()));
+        Quantity quantity2 = new Quantity(q2.getValue(), LengthUnit.valueOf(q2.getUnit()));
+
+        return service.convert(quantity1, quantity2);
+    }
+
     @PostMapping("/divide")
     public QuantityMeasurementEntity divide(@RequestBody QuantityInputDTO input) {
         QuantityDTO q1 = input.getThisQuantityDTO();

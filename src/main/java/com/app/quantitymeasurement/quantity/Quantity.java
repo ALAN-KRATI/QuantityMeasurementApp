@@ -106,5 +106,9 @@ public class Quantity<U extends IMeasurable> {
     public String toString(){
         return String.format("%.2f %s", value, unit.getUnitName());
     }
+    
+    public U getUnit(){
+        return unit;
+    }
 
 }

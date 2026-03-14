@@ -1,5 +1,6 @@
 package com.app.quantitymeasurement.service;
 
+import com.app.quantitymeasurement.measurable.IMeasurable;
 import com.app.quantitymeasurement.model.QuantityMeasurementEntity;
 import com.app.quantitymeasurement.quantity.Quantity;
 import com.app.quantitymeasurement.repository.QuantityMeasurementRepository;
@@ -41,23 +42,22 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
         }
     }
 
+   
     @Override
     public QuantityMeasurementEntity convert(Quantity<?> quantity, Object targetUnit) {
         try {
-
-            Quantity result =
-                    ((Quantity) quantity).convertTo(
-                            (com.app.quantitymeasurement.measurable.IMeasurable) targetUnit);
+            Quantity<IMeasurable> q = (Quantity<IMeasurable>) quantity;
+            Quantity<?> result = q.convertTo(((Quantity<?>) targetUnit).getUnit());
 
             QuantityMeasurementEntity entity =
                     new QuantityMeasurementEntity(
-                        "CONVERT",
-                        quantity.toString(),
-                        null,
-                        result.toString());
-                        
-            repository.save(entity);
+                            "CONVERT",
+                            quantity.toString(),
+                            null,
+                            result.toString()
+                    );
 
+            repository.save(entity);
             return entity;
 
         } catch (Exception e) {
@@ -66,7 +66,6 @@ public class QuantityMeasurementServiceImpl implements IQuantityMeasurementServi
                     new QuantityMeasurementEntity(e.getMessage());
 
             repository.save(entity);
-
             return entity;
         }
     }
