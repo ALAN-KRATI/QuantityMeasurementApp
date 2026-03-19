@@ -1,30 +1,33 @@
 package com.app.quantitymeasurement.model;
 
 import com.app.quantitymeasurement.quantity.Quantity;
-import com.app.quantitymeasurement.measurable.IMeasurable;
 import com.app.quantitymeasurement.units.*;
 
 public class QuantityModel {
     public static Quantity<?> toQuantity(QuantityDTO dto) {
+        String unit = dto.getUnit().toUpperCase();
 
-        switch(dto.getUnit()){
-            case "FEET":
-            case "INCH":
-            case "YARDS":
-            case "CENTIMETER": return new Quantity<>(dto.getValue(), LengthUnit.valueOf(dto.getUnit()));
+        try {
+            try {
+                return new Quantity<>(dto.getValue(), LengthUnit.valueOf(unit));
+            } catch (Exception ignored) {}
 
-            case "KILOGRAM":
-            case "GRAM":
-            case "POUND": return new Quantity<>(dto.getValue(), WeightUnit.valueOf(dto.getUnit()));
+            try {
+                return new Quantity<>(dto.getValue(), WeightUnit.valueOf(unit));
+            } catch (Exception ignored) {}
 
-            case "LITRE":
-            case "MILLILITRE":
-            case "GALLON": return new Quantity<>(dto.getValue(), VolumeUnit.valueOf(dto.getUnit()));
+            try {
+                return new Quantity<>(dto.getValue(), VolumeUnit.valueOf(unit));
+            } catch (Exception ignored) {}
 
-            case "CELSIUS":
-            case "FAHRENHEIT": return new Quantity<>(dto.getValue(), TemperatureUnit.valueOf(dto.getUnit()));
+            try {
+                return new Quantity<>(dto.getValue(), TemperatureUnit.valueOf(unit));
+            } catch (Exception ignored) {}
 
-            default: throw new IllegalArgumentException("Invalid unit");
+            throw new IllegalArgumentException("Invalid unit: " + unit);
+
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid unit: " + unit);
         }
     }
 }

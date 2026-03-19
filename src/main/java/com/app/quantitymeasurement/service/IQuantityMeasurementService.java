@@ -7,7 +7,7 @@ public interface IQuantityMeasurementService {
 
     QuantityMeasurementEntity compare(Quantity<?> q1, Quantity<?> q2);
 
-    QuantityMeasurementEntity convert(Quantity<?> quantity, Object targetUnit);
+    QuantityMeasurementEntity convert(Quantity<?> q1, Quantity<?> q2);
 
     QuantityMeasurementEntity add(Quantity<?> q1, Quantity<?> q2);
 
