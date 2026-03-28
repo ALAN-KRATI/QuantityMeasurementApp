@@ -25,9 +25,9 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+    public <T> T extractClaim(String token, Function<Claims, T> extractor) {
         final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
+        return extractor.apply(claims);
     }
 
     public String generateToken(UserDetails userDetails) {

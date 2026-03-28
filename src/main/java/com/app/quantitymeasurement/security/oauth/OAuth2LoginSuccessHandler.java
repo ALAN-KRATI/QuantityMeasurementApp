@@ -48,6 +48,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String token = jwtService.generateToken(userDetails);
 
-        response.sendRedirect("http://localhost:3000/oauth2/success?token=" + token);
+        response.sendRedirect("http://localhost:5173/oauth2-success?token=" + token);
     }
 }
