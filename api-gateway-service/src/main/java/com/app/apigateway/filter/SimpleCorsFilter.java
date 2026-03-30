@@ -23,6 +23,9 @@ public class SimpleCorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        System.out.println("[CORS Filter] " + request.getMethod() + " " + request.getRequestURI());
+        System.out.println("[CORS Filter] Origin: " + request.getHeader("Origin"));
+
         // Add CORS headers to every response
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
@@ -32,6 +35,7 @@ public class SimpleCorsFilter implements Filter {
 
         // Handle preflight OPTIONS request
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            System.out.println("[CORS Filter] Handling OPTIONS preflight");
             response.setStatus(HttpServletResponse.SC_OK);
             return;
         }
