@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: qma-redis
+    ports:
+      - "6379:6379"
+
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+
+  qma-service:
+    build: ./qma-service
+    container_name: qma-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      - redis
+
+  api-gateway-service:
+    build: ./api-gateway-service
+    container_name: api-gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-service
+      - qma-service
