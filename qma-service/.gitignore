@@ -33,6 +33,4 @@ build/
 .vscode/
 .mvn
 .gitattributes
-mvnw
-mvnw.cmd
 qma-service/src/main/resources/application-secret.properties
