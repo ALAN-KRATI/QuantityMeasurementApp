@@ -35,4 +35,4 @@ build/
 .gitattributes
 mvnw
 mvnw.cmd
-application-secret.properties
+qma-service/src/main/resources/application-secret.properties
