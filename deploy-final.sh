@@ -32,6 +32,46 @@ if ! railway whoami &>/dev/null; then
 fi
 echo -e "${GREEN}✅ Logged in${NC}"
 
+# 2.5 Cleanup stale projects (if hit limit)
+cleanup_if_needed() {
+    echo ""
+    echo -e "${YELLOW}Checking Railway resources...${NC}"
+
+    # Try to create a test project to check limits
+    if ! railway projects 2>/dev/null | head -5; then
+        echo -e "${YELLOW}⚠️  May have hit free plan limit${NC}"
+        echo ""
+        echo "Your projects:"
+        railway list 2>/dev/null || echo "Could not list projects"
+        echo ""
+        echo "Options:"
+        echo "1) Use existing project"
+        echo "2) Delete all projects and start fresh"
+        echo "3) Open dashboard to delete manually"
+        read -p "Choose (1-3): " choice
+
+        case $choice in
+            1)
+                echo "Linking to existing project..."
+                railway link
+                ;;
+            2)
+                echo -e "${RED}Deleting all projects...${NC}"
+                railway list 2>/dev/null | grep -E '^[a-f0-9-]{36}' | while read -r pid; do
+                    [ -n "$pid" ] && (railway delete "$pid" 2>/dev/null || echo "Could not delete $pid")
+                done
+                echo "Done. Run script again to create new project."
+                exit 0
+                ;;
+            3)
+                open https://railway.app/dashboard 2>/dev/null || true
+                read -p "Press Enter after cleanup..."
+                ;;
+        esac
+    fi
+}
+cleanup_if_needed
+
 # 3. Push to GitHub
 echo ""
 echo -e "${YELLOW}Pushing to GitHub...${NC}"
