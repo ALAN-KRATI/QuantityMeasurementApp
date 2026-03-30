@@ -39,55 +39,80 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             org.springframework.security.core.Authentication authentication
     ) throws IOException, ServletException {
 
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        try {
+            OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
-        String email = oAuth2User.getAttribute("email");
-        String name = oAuth2User.getAttribute("name");
+            String email = oAuth2User.getAttribute("email");
+            String name = oAuth2User.getAttribute("name");
 
-        if (email == null) {
-            response.sendError(
-                    HttpServletResponse.SC_BAD_REQUEST,
-                    "Email not found from OAuth2 provider"
-            );
-            return;
-        }
+            if (email == null) {
+                response.sendError(
+                        HttpServletResponse.SC_BAD_REQUEST,
+                        "Email not found from OAuth2 provider"
+                );
+                return;
+            }
 
-        User appUser = userRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    User newUser = new User(
-                            name == null ? "Google User" : name,
-                            email,
-                            null,
-                            Role.USER,
-                            "GOOGLE"
+            User appUser;
+            try {
+                appUser = userRepository.findByEmail(email)
+                        .orElseGet(() -> {
+                            User newUser = new User(
+                                    name == null ? "Google User" : name,
+                                    email,
+                                    null,
+                                    Role.USER,
+                                    "GOOGLE"
+                            );
+                            return userRepository.save(newUser);
+                        });
+            } catch (Exception e) {
+                response.sendError(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "Database error: " + e.getMessage()
+                );
+                return;
+            }
+
+            UserDetails userDetails =
+                    new org.springframework.security.core.userdetails.User(
+                            appUser.getEmail(),
+                            "",
+                            Collections.singletonList(
+                                    new SimpleGrantedAuthority(
+                                            "ROLE_" + appUser.getRole().name()
+                                    )
+                            )
                     );
 
-                    return userRepository.save(newUser);
-                });
-
-        UserDetails userDetails =
-                new org.springframework.security.core.userdetails.User(
-                        appUser.getEmail(),
-                        "",
-                        Collections.singletonList(
-                                new SimpleGrantedAuthority(
-                                        "ROLE_" + appUser.getRole().name()
-                                )
-                        )
+            String token;
+            try {
+                token = jwtService.generateToken(userDetails);
+            } catch (Exception e) {
+                response.sendError(
+                        HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                        "JWT error: " + e.getMessage()
                 );
+                return;
+            }
 
-        String token = jwtService.generateToken(userDetails);
+            // Get frontend URL from environment variable or use default
+            String frontendUrl = System.getenv("FRONTEND_URL");
+            if (frontendUrl == null || frontendUrl.isEmpty()) {
+                frontendUrl = "http://localhost:5173";
+            }
 
-        // Get frontend URL from environment variable or use default
-        String frontendUrl = System.getenv("FRONTEND_URL");
-        if (frontendUrl == null || frontendUrl.isEmpty()) {
-            frontendUrl = "http://localhost:5173";
+            String redirectUrl =
+                    frontendUrl + "/oauth2-success?token=" +
+                            URLEncoder.encode(token, StandardCharsets.UTF_8);
+
+            response.sendRedirect(redirectUrl);
+
+        } catch (Exception e) {
+            response.sendError(
+                    HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+                    "OAuth2 error: " + e.getMessage()
+            );
         }
-
-        String redirectUrl =
-                frontendUrl + "/oauth2-success?token=" +
-                        URLEncoder.encode(token, StandardCharsets.UTF_8);
-
-        response.sendRedirect(redirectUrl);
     }
 }
