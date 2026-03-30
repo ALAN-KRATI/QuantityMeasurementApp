@@ -29,6 +29,12 @@ public class GatewayController {
         this.restTemplate = new RestTemplate();
     }
 
+    @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
+    public ResponseEntity<Void> handleOptions() {
+        logger.debug("Handling OPTIONS request");
+        return ResponseEntity.ok().build();
+    }
+
     @RequestMapping(value = "/auth/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
     public ResponseEntity<byte[]> proxyAuth(HttpServletRequest request, @RequestBody(required = false) byte[] body) {
         logger.debug("Proxying auth request: {}", request.getRequestURI());
