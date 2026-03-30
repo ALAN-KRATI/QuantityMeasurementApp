@@ -63,16 +63,21 @@ public class GatewayConfig {
 
             // Build headers
             org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-            request.headers().asHttpHeaders().forEach((name, values) -> {
-                headers.put(name, values);
-            });
+            request.headers().asHttpHeaders().forEach(headers::putAll);
 
-            // Get body if present
-            byte[] body = request.body(byte[].class);
+            // Get body if present (only for POST/PUT/PATCH)
+            byte[] body = null;
+            if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH) {
+                try {
+                    body = request.body(byte[].class);
+                } catch (Exception ignored) {
+                    // No body present
+                }
+            }
 
             // Create request entity
             org.springframework.http.HttpEntity<byte[]> requestEntity = new org.springframework.http.HttpEntity<>(
-                    body != null && body.length > 0 ? body : null,
+                    body,
                     headers
             );
 
@@ -88,15 +93,21 @@ public class GatewayConfig {
             ServerResponse.BodyBuilder responseBuilder = ServerResponse
                     .status(response.getStatusCode());
 
-            // Copy response headers
+            // Copy response headers (skip problematic ones)
             response.getHeaders().forEach((name, values) -> {
-                values.forEach(value -> responseBuilder.header(name, value));
+                if (!name.equalsIgnoreCase("Transfer-Encoding") && !name.equalsIgnoreCase("Content-Length")) {
+                    values.forEach(value -> responseBuilder.header(name, value));
+                }
             });
 
             return responseBuilder.body(response.getBody() != null ? response.getBody() : new byte[0]);
 
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            return ServerResponse.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
+        } catch (org.springframework.web.client.HttpServerErrorException e) {
+            return ServerResponse.status(e.getStatusCode()).body(e.getResponseBodyAsByteArray());
         } catch (Exception e) {
-            return ServerResponse.status(500).body("Gateway error: " + e.getMessage());
+            return ServerResponse.status(500).body(("Gateway error: " + e.getMessage()).getBytes());
         }
     }
 }
