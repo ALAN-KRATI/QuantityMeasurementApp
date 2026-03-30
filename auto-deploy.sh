@@ -95,8 +95,9 @@ create_project() {
     echo -e "${YELLOW}📁 Creating Railway project...${NC}"
 
     if [ ! -f .railway/config.json ]; then
-        # Create new project with empty template
-        railway init --name qma-app --empty
+        # Create new project
+        echo "Creating new Railway project 'qma-app'..."
+        railway init --name qma-app
     fi
 
     PROJECT_ID=$(railway status --json 2>/dev/null | grep -o '"id":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "")

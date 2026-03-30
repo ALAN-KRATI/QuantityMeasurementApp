@@ -79,7 +79,8 @@ Write-Host ""
 Write-Yellow "📁 Creating Railway project..."
 
 if (-not (Test-Path .railway/config.json)) {
-    railway init --name qma-app --empty
+    Write-Host "Creating new Railway project 'qma-app'..."
+    railway init --name qma-app
 }
 
 Write-Green "✅ Project ready"
