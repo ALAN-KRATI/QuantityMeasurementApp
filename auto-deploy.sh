@@ -144,11 +144,27 @@ deploy_service() {
 
     cd "$dir"
 
-    # Create and link service
-    railway up --service "$name" || {
-        echo -e "${RED}Failed to deploy $name${NC}"
-        cd - > /dev/null
-        return 1
+    # First, create service if it doesn't exist
+    # Using 'railway service' command or just deploy which auto-creates
+    echo "  Creating service $name..."
+    railway service 2>/dev/null || true
+
+    # Deploy - this will create service if needed
+    railway up 2>&1 | tee /tmp/railway-deploy.log || {
+        # Check if it's a "not found" error
+        if grep -q "not found" /tmp/railway-deploy.log 2>/dev/null; then
+            echo "  Service doesn't exist, creating with 'railway up'..."
+            # Run without --service to auto-create
+            railway up || {
+                echo -e "${RED}Failed to deploy $name${NC}"
+                cd - > /dev/null
+                return 1
+            }
+        else
+            echo -e "${RED}Failed to deploy $name${NC}"
+            cd - > /dev/null
+            return 1
+        fi
     }
 
     cd - > /dev/null
