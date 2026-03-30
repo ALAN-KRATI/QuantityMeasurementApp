@@ -1,17 +1,17 @@
 package com.app.apigateway.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
 
 import java.net.URI;
+import java.util.Enumeration;
 
 import static org.springframework.web.servlet.function.RequestPredicates.path;
 import static org.springframework.web.servlet.function.RouterFunctions.route;
@@ -30,73 +30,68 @@ public class GatewayConfig {
     @Bean
     public RouterFunction<ServerResponse> gatewayRoutes() {
         return route()
-                // Handle CORS preflight
-                .route(path("/**").and(request -> request.method() == HttpMethod.OPTIONS), request ->
-                    ServerResponse.ok()
-                        .header("Access-Control-Allow-Origin", request.headers().firstHeader("Origin") != null ? request.headers().firstHeader("Origin") : "*")
-                        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-                        .header("Access-Control-Allow-Headers", "*")
-                        .header("Access-Control-Allow-Credentials", "true")
-                        .build()
-                )
-                // Auth service routes
-                .route(path("/auth/**"), request -> proxy(request, authServiceUrl))
-                .route(path("/oauth2/**"), request -> proxy(request, authServiceUrl))
-                .route(path("/login/oauth2/**"), request -> proxy(request, authServiceUrl))
-                // QMA service routes
-                .route(path("/quantities/**"), request -> proxy(request, qmaServiceUrl))
+                .route(path("/auth/**"), this::handleAuth)
+                .route(path("/oauth2/**"), this::handleAuth)
+                .route(path("/login/oauth2/**"), this::handleAuth)
+                .route(path("/quantities/**"), this::handleQma)
                 .build();
+    }
+
+    private ServerResponse handleAuth(org.springframework.web.servlet.function.ServerRequest request) {
+        return proxy(request, authServiceUrl);
+    }
+
+    private ServerResponse handleQma(org.springframework.web.servlet.function.ServerRequest request) {
+        return proxy(request, qmaServiceUrl);
     }
 
     private ServerResponse proxy(org.springframework.web.servlet.function.ServerRequest request, String baseUrl) {
         try {
             HttpMethod method = request.method();
             String path = request.uri().getPath();
-            String query = request.uri().getQuery();
+            String query = request.uri().getRawQuery();
 
             String targetUrl = baseUrl + path + (query != null ? "?" + query : "");
             URI uri = URI.create(targetUrl);
 
             // Build headers
             HttpHeaders headers = new HttpHeaders();
-            request.headers().asHttpHeaders().forEach((name, values) -> headers.addAll(name, values));
+            request.headers().asHttpHeaders().forEach(headers::addAll);
 
             // Get body for POST/PUT/PATCH
             byte[] body = null;
             if (method == HttpMethod.POST || method == HttpMethod.PUT || method == HttpMethod.PATCH) {
                 try {
                     body = request.body(byte[].class);
-                } catch (Exception ignored) {}
+                } catch (Exception e) {
+                    // No body
+                }
             }
 
-            HttpEntity<byte[]> requestEntity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<byte[]> response = restTemplate.exchange(uri, method, requestEntity, byte[].class);
+            HttpEntity<byte[]> entity = new HttpEntity<>(body, headers);
+            ResponseEntity<byte[]> response = restTemplate.exchange(uri, method, entity, byte[].class);
 
             ServerResponse.BodyBuilder builder = ServerResponse.status(response.getStatusCode());
 
-            // Copy headers
+            // Copy response headers (skip restricted ones)
             response.getHeaders().forEach((name, values) -> {
                 if (!name.equalsIgnoreCase("Transfer-Encoding") && !name.equalsIgnoreCase("Content-Length")) {
                     builder.header(name, String.join(",", values));
                 }
             });
 
-            // Add CORS
+            // Add CORS headers
             String origin = request.headers().firstHeader("Origin");
             builder.header("Access-Control-Allow-Origin", origin != null ? origin : "*");
             builder.header("Access-Control-Allow-Credentials", "true");
 
             return builder.body(response.getBody() != null ? response.getBody() : new byte[0]);
 
-        } catch (org.springframework.web.client.HttpStatusCodeException e) {
-            return ServerResponse.status(e.getStatusCode())
-                .header("Access-Control-Allow-Origin", request.headers().firstHeader("Origin") != null ? request.headers().firstHeader("Origin") : "*")
-                .body(e.getResponseBodyAsByteArray());
         } catch (Exception e) {
-            return ServerResponse.status(500)
-                .header("Access-Control-Allow-Origin", request.headers().firstHeader("Origin") != null ? request.headers().firstHeader("Origin") : "*")
-                .body(("Gateway error: " + e.getMessage()).getBytes());
+            String origin = request.headers().firstHeader("Origin");
+            return ServerResponse.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Access-Control-Allow-Origin", origin != null ? origin : "*")
+                    .body(("Error: " + e.getMessage()).getBytes());
         }
     }
 }
