@@ -72,7 +72,7 @@ public class GatewayConfig {
 
             // Build headers
             org.springframework.http.HttpHeaders headers = new org.springframework.http.HttpHeaders();
-            request.headers().asHttpHeaders().forEach(headers::putAll);
+            request.headers().asHttpHeaders().forEach((name, values) -> headers.addAll(name, values));
 
             // Get body if present (only for POST/PUT/PATCH)
             byte[] body = null;
