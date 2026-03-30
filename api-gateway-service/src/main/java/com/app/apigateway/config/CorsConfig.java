@@ -16,7 +16,15 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowCredentials(true);
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+
+        // Allow frontend URLs from environment variable or default to localhost
+        String allowedOrigins = System.getenv("CORS_ALLOWED_ORIGINS");
+        if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
+            config.setAllowedOrigins(List.of(allowedOrigins.split(",")));
+        } else {
+            config.setAllowedOrigins(List.of("http://localhost:5173"));
+        }
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
 

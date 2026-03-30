@@ -78,8 +78,14 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         String token = jwtService.generateToken(userDetails);
 
+        // Get frontend URL from environment variable or use default
+        String frontendUrl = System.getenv("FRONTEND_URL");
+        if (frontendUrl == null || frontendUrl.isEmpty()) {
+            frontendUrl = "http://localhost:5173";
+        }
+
         String redirectUrl =
-                "http://localhost:5173/oauth2-success?token=" +
+                frontendUrl + "/oauth2-success?token=" +
                         URLEncoder.encode(token, StandardCharsets.UTF_8);
 
         response.sendRedirect(redirectUrl);
