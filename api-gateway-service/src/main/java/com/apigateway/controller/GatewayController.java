@@ -1,4 +1,4 @@
-package com.app.apigateway.controller;
+package com.apigateway.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
