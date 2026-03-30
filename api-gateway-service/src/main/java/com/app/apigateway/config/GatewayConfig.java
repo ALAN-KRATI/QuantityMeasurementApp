@@ -29,6 +29,15 @@ public class GatewayConfig {
     @Bean
     public RouterFunction<ServerResponse> gatewayRoutes() {
         return route()
+                // Handle CORS preflight
+                .route(path("/**").and(request -> request.method() == HttpMethod.OPTIONS), request -> {
+                    return ServerResponse.ok()
+                            .header("Access-Control-Allow-Origin", request.headers().firstHeader("Origin") != null ? request.headers().firstHeader("Origin") : "*")
+                            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                            .header("Access-Control-Allow-Headers", "*")
+                            .header("Access-Control-Allow-Credentials", "true")
+                            .build();
+                })
                 // Auth service routes
                 .route(path("/auth/**"), request -> {
                     String targetUrl = authServiceUrl + request.uri().getPath();
@@ -99,6 +108,11 @@ public class GatewayConfig {
                     values.forEach(value -> responseBuilder.header(name, value));
                 }
             });
+
+            // Add CORS headers
+            String origin = request.headers().firstHeader("Origin");
+            responseBuilder.header("Access-Control-Allow-Origin", origin != null ? origin : "*");
+            responseBuilder.header("Access-Control-Allow-Credentials", "true");
 
             return responseBuilder.body(response.getBody() != null ? response.getBody() : new byte[0]);
 
