@@ -1,0 +1,12 @@
+[build]
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
+
+[deploy]
+startCommand = "java -jar target/api-gateway-service-0.0.1-SNAPSHOT.jar"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10
+
+[deploy.env]
+AUTH_SERVICE_URL = "${{AUTH_SERVICE_URL}}"
+QMA_SERVICE_URL = "${{QMA_SERVICE_URL}}"
