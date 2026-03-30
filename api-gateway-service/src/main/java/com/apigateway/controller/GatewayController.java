@@ -27,11 +27,8 @@ public class GatewayController {
 
     @RequestMapping(value = "/**", method = RequestMethod.OPTIONS)
     public ResponseEntity<Void> handleOptions() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-        headers.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        headers.add("Access-Control-Allow-Headers", "*");
-        return new ResponseEntity<>(headers, HttpStatus.OK);
+        // CORS headers are applied by CorsFilter — no manual headers needed here
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/auth/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
@@ -82,23 +79,15 @@ public class GatewayController {
                 }
             });
 
-            // Add CORS headers to all responses
-            responseHeaders.add("Access-Control-Allow-Origin", "*");
-            responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-            responseHeaders.add("Access-Control-Allow-Headers", "*");
-
+            // CORS headers are applied by CorsFilter — no manual headers needed here
             return new ResponseEntity<>(response.getBody(), responseHeaders, response.getStatusCode());
 
         } catch (HttpStatusCodeException e) {
-            HttpHeaders errorHeaders = new HttpHeaders();
-            errorHeaders.add("Access-Control-Allow-Origin", "*");
-            return new ResponseEntity<>(e.getResponseBodyAsByteArray(), errorHeaders, e.getStatusCode());
+            // CORS headers are applied by CorsFilter — no manual headers needed here
+            return new ResponseEntity<>(e.getResponseBodyAsByteArray(), new HttpHeaders(), e.getStatusCode());
         } catch (Exception e) {
             logger.error("Gateway error: {}", e.getMessage());
-            HttpHeaders errorHeaders = new HttpHeaders();
-            errorHeaders.add("Access-Control-Allow-Origin", "*");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .headers(errorHeaders)
                     .body(("Gateway Error: " + e.getMessage()).getBytes());
         }
     }
