@@ -29,6 +29,14 @@ public class GatewayConfig {
     @Bean
     public RouterFunction<ServerResponse> gatewayRoutes() {
         return route()
+                // Handle OPTIONS preflight for all routes
+                .route(request -> request.method() == HttpMethod.OPTIONS, request -> {
+                    return ServerResponse.ok()
+                            .header("Access-Control-Allow-Origin", "*")
+                            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+                            .header("Access-Control-Allow-Headers", "*")
+                            .build();
+                })
                 // Auth service routes
                 .route(path("/auth/**"), request -> {
                     String targetUrl = authServiceUrl + request.uri().getPath();
