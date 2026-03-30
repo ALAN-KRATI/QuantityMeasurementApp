@@ -17,10 +17,10 @@ public class GatewayController {
 
     private static final Logger logger = LoggerFactory.getLogger(GatewayController.class);
 
-    @Value("${AUTH_SERVICE_URL:http://localhost:8081}")
+    @Value("${AUTH_SERVICE_URL}")
     private String authServiceUrl;
 
-    @Value("${QMA_SERVICE_URL:http://localhost:8082}")
+    @Value("${QMA_SERVICE_URL}")
     private String qmaServiceUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
