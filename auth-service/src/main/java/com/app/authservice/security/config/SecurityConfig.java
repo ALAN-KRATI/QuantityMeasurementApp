@@ -87,7 +87,7 @@ public class SecurityConfig {
                 )
 
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
 
                 .authenticationProvider(authenticationProvider())
@@ -150,12 +150,13 @@ public class SecurityConfig {
 
         CorsConfiguration configuration = new CorsConfiguration();
 
-        // Allow frontend URLs from environment variable or default to localhost
+        // MUST be set in Railway - no localhost fallback for production
         String allowedOrigins = System.getenv("CORS_ALLOWED_ORIGINS");
         if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
             configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
         } else {
-            configuration.setAllowedOrigins(List.of("http://localhost:5173"));
+            // Production default - MUST change via env var
+            configuration.setAllowedOrigins(List.of("https://quantity-measurement-app-frontend-1.vercel.app"));
         }
 
         configuration.setAllowedMethods(
