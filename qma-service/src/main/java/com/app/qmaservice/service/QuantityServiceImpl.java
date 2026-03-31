@@ -5,10 +5,8 @@ import com.app.qmaservice.entity.QuantityMeasurementEntity;
 import com.app.qmaservice.quantity.Quantity;
 import com.app.qmaservice.repository.QuantityMeasurementRepository;
 import com.app.qmaservice.util.QuantityModel;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -17,14 +15,11 @@ import java.util.function.Supplier;
 public class QuantityServiceImpl implements QuantityService {
 
     private final QuantityMeasurementRepository repository;
-    private final RedisTemplate<String, String> redisTemplate;
 
     public QuantityServiceImpl(
-            QuantityMeasurementRepository repository,
-            RedisTemplate<String, String> redisTemplate
+            QuantityMeasurementRepository repository
     ) {
         this.repository = repository;
-        this.redisTemplate = redisTemplate;
     }
 
     private QuantityMeasurementEntity execute(
@@ -35,28 +30,12 @@ public class QuantityServiceImpl implements QuantityService {
             Supplier<String> action
     ) {
 
-        String cacheKey = operation + ":" + q1 + ":" + q2;
+       
 
-        String cachedResult = redisTemplate.opsForValue().get(cacheKey);
-
-        if (cachedResult != null) {
-            return new QuantityMeasurementEntity(
-                    userEmail,
-                    operation,
-                    q1 != null ? q1.toString() : null,
-                    q2 != null ? q2.toString() : null,
-                    cachedResult + " (from Redis cache)"
-            );
-        }
+       
 
         try {
             String result = action.get();
-
-            redisTemplate.opsForValue().set(
-                    cacheKey,
-                    result,
-                    Duration.ofMinutes(30)
-            );
 
             QuantityMeasurementEntity entity = new QuantityMeasurementEntity(
                     userEmail,
@@ -67,9 +46,6 @@ public class QuantityServiceImpl implements QuantityService {
             );
 
             QuantityMeasurementEntity saved = repository.save(entity);
-
-            // clear cached history because a new record was added
-            redisTemplate.delete("history:" + userEmail);
 
             return saved;
 
@@ -160,23 +136,12 @@ public class QuantityServiceImpl implements QuantityService {
     @Override
     public List<QuantityMeasurementEntity> getHistory(String userEmail) {
 
-        String historyKey = "history:" + userEmail;
 
-        // just to check if Redis already has something
-        String cachedHistory = redisTemplate.opsForValue().get(historyKey);
-
-        if (cachedHistory != null) {
-            System.out.println("History found in Redis cache. Redis really said 'I gotchu'.");
-        }
 
         List<QuantityMeasurementEntity> history =
                 repository.findByUserEmailOrderByCreatedAtDesc(userEmail);
 
-        redisTemplate.opsForValue().set(
-                historyKey,
-                history.toString(),
-                Duration.ofMinutes(10)
-        );
+
 
         return history;
     }
