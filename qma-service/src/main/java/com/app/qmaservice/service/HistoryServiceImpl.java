@@ -26,6 +26,8 @@ public class HistoryServiceImpl implements HistoryService {
                 .map(entity -> new HistoryResponse(
                         entity.getId(),
                         entity.getOperation(),
+                        entity.getOperand1(),
+                        entity.getOperand2(),
                         entity.getResult(),
                         entity.getCreatedAt()
                 ))
