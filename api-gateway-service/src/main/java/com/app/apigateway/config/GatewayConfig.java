@@ -1,11 +1,16 @@
 package com.app.apigateway.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.function.RouterFunction;
 import org.springframework.web.servlet.function.ServerResponse;
+import org.springframework.web.servlet.function.HandlerFilterFunction;
+
+import java.net.URI;
 
 import static org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions.rewritePath;
+import static org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions.setPath;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
 import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
 import static org.springframework.web.servlet.function.RequestPredicates.path;
@@ -13,39 +18,39 @@ import static org.springframework.web.servlet.function.RequestPredicates.path;
 @Configuration
 public class GatewayConfig {
 
+    @Value("${AUTH_SERVICE_URL:http://localhost:8081}")
+    private String authServiceUrl;
+
+    @Value("${QMA_SERVICE_URL:http://localhost:8082}")
+    private String qmaServiceUrl;
+
     @Bean
     public RouterFunction<ServerResponse> gatewayRoutes() {
         return route()
 
-                // OAuth routes
+                // OAuth2 authorization endpoint (initial login request)
                 .route(
-                        path("/api/auth/oauth2/**"),
-                        http("http://auth-service:8081")
+                        path("/oauth2/authorization/**"),
+                        http(authServiceUrl)
                 )
-                .before(rewritePath(
-                        "/api/auth/(?<segment>.*)",
-                        "/${segment}"
-                ))
 
-                // Login/Register routes
+                // OAuth2 callback endpoint - proxy directly without rewrite
                 .route(
-                        path("/api/auth/**"),
-                        http("http://auth-service:8081")
+                        path("/login/oauth2/code/*"),
+                        http(authServiceUrl)
                 )
-                .before(rewritePath(
-                        "/api/auth/(?<segment>.*)",
-                        "/auth/${segment}"
-                ))
 
-                // QMA routes
+                // Auth routes (login/register)
                 .route(
-                        path("/api/qma/**"),
-                        http("http://qma-service:8082")
+                        path("/auth/**"),
+                        http(authServiceUrl)
                 )
-                .before(rewritePath(
-                        "/api/qma/(?<segment>.*)",
-                        "/quantities/${segment}"
-                ))
+
+                // Quantities routes
+                .route(
+                        path("/quantities/**"),
+                        http(qmaServiceUrl)
+                )
 
                 .build();
     }

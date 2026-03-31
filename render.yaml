@@ -1,0 +1,70 @@
+services:
+  - type: redis
+    name: qma-redis
+    ipAllowList: []
+
+  - type: pserv
+    name: auth-service
+    runtime: docker
+    dockerfilePath: ./auth-service/Dockerfile
+    buildContext: ./auth-service
+    envVars:
+      - key: DB_HOST
+        value: your-mysql-host.render.com
+      - key: DB_USERNAME
+        value: qmauser
+      - key: DB_PASSWORD
+        generateValue: true
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OAUTH2_REDIRECT_URI
+        value: https://your-frontend-url.onrender.com/oauth2-success
+    env: standard
+
+  - type: pserv
+    name: qma-service
+    runtime: docker
+    dockerfilePath: ./qma-service/Dockerfile
+    buildContext: ./qma-service
+    envVars:
+      - key: DB_HOST
+        value: your-mysql-host.render.com
+      - key: DB_USERNAME
+        value: qmauser
+      - key: DB_PASSWORD
+        fromService:
+          name: auth-service
+          type: pserv
+          envVarKey: DB_PASSWORD
+      - key: JWT_SECRET
+        fromService:
+          name: auth-service
+          type: pserv
+          envVarKey: JWT_SECRET
+      - key: REDIS_HOST
+        fromService:
+          name: qma-redis
+          type: redis
+          property: host
+    env: standard
+
+  - type: web
+    name: api-gateway
+    runtime: docker
+    dockerfilePath: ./api-gateway-service/Dockerfile
+    buildContext: ./api-gateway-service
+    envVars:
+      - key: AUTH_SERVICE_URL
+        value: http://auth-service:8081
+      - key: QMA_SERVICE_URL
+        value: http://qma-service:8082
+    env: standard
+
+  - type: static
+    name: frontend
+    runtime: static
+    buildCommand: cd QuantityMeasurementApp-Frontend- && npm install && npm run build
+    staticPublishPath: ./QuantityMeasurementApp-Frontend-/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://api-gateway-xxx.onrender.com

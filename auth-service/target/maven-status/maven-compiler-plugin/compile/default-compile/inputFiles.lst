@@ -1,0 +1,15 @@
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/AuthServiceApplication.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/auth/controller/AuthController.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/auth/dto/AuthResponse.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/auth/dto/LoginRequest.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/auth/dto/RegisterRequest.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/security/config/SecurityConfig.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/security/filter/JwtAuthenticationFilter.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/security/jwt/JwtService.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/security/oauth/OAuth2LoginSuccessHandler.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/service/AuthService.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/service/AuthServiceImpl.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/service/CustomUserDetailsService.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/user/entity/Role.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/user/entity/User.java
+/Users/shivang.shukla/Desktop/Alan/QuantityMeasurementApp/auth-service/src/main/java/com/app/authservice/user/repository/UserRepository.java
