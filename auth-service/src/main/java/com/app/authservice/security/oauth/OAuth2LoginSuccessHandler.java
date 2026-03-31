@@ -99,7 +99,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             // Get frontend URL from environment variable or use default
             String frontendUrl = System.getenv("FRONTEND_URL");
             if (frontendUrl == null || frontendUrl.isEmpty()) {
-                frontendUrl = "http://localhost:5173";
+                frontendUrl = "https://quantity-measurement-app-frontend-opal.vercel.app";
             }
 
             String redirectUrl =
