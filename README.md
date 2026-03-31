@@ -10,21 +10,19 @@ Quantity Measurement App Backend is a Spring Boot microservices-based backend th
 - Quantity Conversion
 - Conversion History Tracking
 - API Gateway Routing
-- PostgreSQL Database Integration
-- Redis Caching
+- MySQL Database Integration
 - Microservices Architecture
 - Docker and Docker Compose Support
 
 ## Tech Stack
 
-- Java 21
+- Java 
 - Spring Boot
 - Spring Security
 - Spring Cloud Gateway
 - Spring Data JPA
 - JWT
-- PostgreSQL
-- Redis
+- MySQL
 - Maven
 - Docker
 - Docker Compose
