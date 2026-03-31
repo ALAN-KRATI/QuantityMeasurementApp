@@ -1,6 +1,6 @@
 # Quantity Measurement App Backend
 
-Quantity Measurement App Backend is a Spring Boot microservices-based backend that handles user authentication, quantity conversion, and conversion history. It uses separate services for authentication, quantity measurement, and API gateway routing, with PostgreSQL for storage and Redis for caching.
+Quantity Measurement App Backend is a Spring Boot microservices-based backend that handles user authentication, quantity conversion, and conversion history. It uses separate services for authentication, quantity measurement, and API gateway routing, with MySQL for storage.
 
 ## Features
 
