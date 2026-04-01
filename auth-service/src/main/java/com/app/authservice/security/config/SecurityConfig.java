@@ -36,167 +36,153 @@ import java.util.Map;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-    private final CustomUserDetailsService userDetailsService;
-    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    private final ClientRegistrationRepository clientRegistrationRepository;
+        private final JwtAuthenticationFilter jwtAuthenticationFilter;
+        private final CustomUserDetailsService userDetailsService;
+        private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
+        private final ClientRegistrationRepository clientRegistrationRepository;
 
-    public SecurityConfig(
-            JwtAuthenticationFilter jwtAuthenticationFilter,
-            CustomUserDetailsService userDetailsService,
-            OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
-            ClientRegistrationRepository clientRegistrationRepository
-    ) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-        this.userDetailsService = userDetailsService;
-        this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
-        this.clientRegistrationRepository = clientRegistrationRepository;
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-        http
-                .cors(Customizer.withDefaults())
-                .csrf(csrf -> csrf.disable())
-
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/actuator/**").permitAll()
-                        .requestMatchers(
-                                "/auth/**",
-                                "/oauth2/**",
-                                "/login/oauth2/**"
-                        ).permitAll()
-                        .anyRequest().authenticated()
-                )
-
-                .oauth2Login(oauth -> oauth
-                        .authorizationEndpoint(endpoint -> endpoint
-                                .authorizationRequestResolver(
-                                        authorizationRequestResolver()
-                                )
-                        )
-                        .successHandler(oAuth2LoginSuccessHandler)
-                )
-
-                .exceptionHandling(exception -> exception
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("Unauthorized");
-                        })
-                )
-
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                .authenticationProvider(authenticationProvider())
-
-                .addFilterBefore(
-                        jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
-
-        return http.build();
-    }
-
-    @Bean
-    public OAuth2AuthorizationRequestResolver authorizationRequestResolver() {
-
-        DefaultOAuth2AuthorizationRequestResolver resolver =
-                new DefaultOAuth2AuthorizationRequestResolver(
-                        clientRegistrationRepository,
-                        "/oauth2/authorization"
-                );
-
-        return new OAuth2AuthorizationRequestResolver() {
-
-            @Override
-            public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
-                return customize(resolver.resolve(request));
-            }
-
-            @Override
-            public OAuth2AuthorizationRequest resolve(
-                    HttpServletRequest request,
-                    String clientRegistrationId
-            ) {
-                return customize(
-                        resolver.resolve(request, clientRegistrationId)
-                );
-            }
-
-            private OAuth2AuthorizationRequest customize(
-                    OAuth2AuthorizationRequest request
-            ) {
-                if (request == null) {
-                    return null;
-                }
-
-                Map<String, Object> additionalParameters =
-                        new HashMap<>(request.getAdditionalParameters());
-
-                additionalParameters.put("prompt", "select_account");
-
-                return OAuth2AuthorizationRequest.from(request)
-                        .additionalParameters(additionalParameters)
-                        .build();
-            }
-        };
-    }
-
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        // Allow frontend URLs from environment variable or default to localhost
-        String allowedOrigins = System.getenv("CORS_ALLOWED_ORIGINS");
-        if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
-            configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
-        } else {
-            configuration.setAllowedOrigins(List.of(
-            "http://localhost:5173",
-            "https://quantity-measurement-app-frontend-opal.vercel.app"
-    ));
+        public SecurityConfig(
+                        JwtAuthenticationFilter jwtAuthenticationFilter,
+                        CustomUserDetailsService userDetailsService,
+                        OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler,
+                        ClientRegistrationRepository clientRegistrationRepository) {
+                this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+                this.userDetailsService = userDetailsService;
+                this.oAuth2LoginSuccessHandler = oAuth2LoginSuccessHandler;
+                this.clientRegistrationRepository = clientRegistrationRepository;
         }
 
-        configuration.setAllowedMethods(
-                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")
-        );
+        @Bean
+        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
+                http
+                                .cors(Customizer.withDefaults())
+                                .csrf(csrf -> csrf.disable())
 
-        UrlBasedCorsConfigurationSource source =
-                new UrlBasedCorsConfigurationSource();
+                                .authorizeHttpRequests(auth -> auth
+                                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                                                .requestMatchers("/actuator/**").permitAll()
+                                                .requestMatchers(
+                                                        "/auth/**",
+                                                        "/oauth2/**",
+                                                        "/login/oauth2/**",
+                                                        "/swagger-ui.html",
+                                                        "/swagger-ui/**",
+                                                        "/v3/api-docs/**")
+                                                .permitAll()
+                                                .anyRequest().authenticated())
 
-        source.registerCorsConfiguration("/**", configuration);
+                                .oauth2Login(oauth -> oauth
+                                                .authorizationEndpoint(endpoint -> endpoint
+                                                                .authorizationRequestResolver(
+                                                                                authorizationRequestResolver()))
+                                                .successHandler(oAuth2LoginSuccessHandler))
 
-        return source;
-    }
+                                .exceptionHandling(exception -> exception
+                                                .authenticationEntryPoint((request, response, authException) -> {
+                                                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                                        response.getWriter().write("Unauthorized");
+                                                }))
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+                                .sessionManagement(session -> session
+                                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
+                                .authenticationProvider(authenticationProvider())
 
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+                                .addFilterBefore(
+                                                jwtAuthenticationFilter,
+                                                UsernamePasswordAuthenticationFilter.class);
 
-        provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+                return http.build();
+        }
 
-        return provider;
-    }
+        @Bean
+        public OAuth2AuthorizationRequestResolver authorizationRequestResolver() {
 
-    @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration
-    ) throws Exception {
-        return configuration.getAuthenticationManager();
-    }
+                DefaultOAuth2AuthorizationRequestResolver resolver = new DefaultOAuth2AuthorizationRequestResolver(
+                                clientRegistrationRepository,
+                                "/oauth2/authorization");
+
+                return new OAuth2AuthorizationRequestResolver() {
+
+                        @Override
+                        public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
+                                return customize(resolver.resolve(request));
+                        }
+
+                        @Override
+                        public OAuth2AuthorizationRequest resolve(
+                                        HttpServletRequest request,
+                                        String clientRegistrationId) {
+                                return customize(
+                                                resolver.resolve(request, clientRegistrationId));
+                        }
+
+                        private OAuth2AuthorizationRequest customize(
+                                        OAuth2AuthorizationRequest request) {
+                                if (request == null) {
+                                        return null;
+                                }
+
+                                Map<String, Object> additionalParameters = new HashMap<>(
+                                                request.getAdditionalParameters());
+
+                                additionalParameters.put("prompt", "select_account");
+
+                                return OAuth2AuthorizationRequest.from(request)
+                                                .additionalParameters(additionalParameters)
+                                                .build();
+                        }
+                };
+        }
+
+        @Bean
+        public CorsConfigurationSource corsConfigurationSource() {
+
+                CorsConfiguration configuration = new CorsConfiguration();
+
+                // Allow frontend URLs from environment variable or default to localhost
+                String allowedOrigins = System.getenv("CORS_ALLOWED_ORIGINS");
+                if (allowedOrigins != null && !allowedOrigins.isEmpty()) {
+                        configuration.setAllowedOrigins(List.of(allowedOrigins.split(",")));
+                } else {
+                        configuration.setAllowedOrigins(List.of(
+                                        "http://localhost:5173",
+                                        "https://quantity-measurement-app-frontend-opal.vercel.app"));
+                }
+
+                configuration.setAllowedMethods(
+                                List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+                configuration.setAllowedHeaders(List.of("*"));
+                configuration.setAllowCredentials(true);
+
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
+                source.registerCorsConfiguration("/**", configuration);
+
+                return source;
+        }
+
+        @Bean
+        public PasswordEncoder passwordEncoder() {
+                return new BCryptPasswordEncoder();
+        }
+
+        @Bean
+        public AuthenticationProvider authenticationProvider() {
+
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
+                provider.setUserDetailsService(userDetailsService);
+                provider.setPasswordEncoder(passwordEncoder());
+
+                return provider;
+        }
+
+        @Bean
+        public AuthenticationManager authenticationManager(
+                        AuthenticationConfiguration configuration) throws Exception {
+                return configuration.getAuthenticationManager();
+        }
 }
