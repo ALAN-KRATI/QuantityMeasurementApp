@@ -23,6 +23,14 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/swagger-ui/index.html",
+                                "/v3/api-docs/**",
+                                "/auth-service/v3/api-docs",
+                                "/qma-service/v3/api-docs"
+                        ).permitAll()
                         .anyRequest().permitAll()
                 );
 

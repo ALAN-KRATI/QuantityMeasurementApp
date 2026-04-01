@@ -40,14 +40,15 @@ public class SecurityConfig {
                .authorizeHttpRequests(auth -> auth
         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
         .requestMatchers(
-                            "/error",
-                            "/swagger-ui.html",
-                            "/swagger-ui/**",
-                            "/v3/api-docs/**"
-                    ).permitAll()
-                    .requestMatchers("/quantities/**").authenticated()
-                    .anyRequest().permitAll()
-                )
+                    "/error",
+                    "/swagger-ui.html",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/qma-service/v3/api-docs"
+                ).permitAll()
+                .requestMatchers("/quantities/**").authenticated()
+                .anyRequest().permitAll()
+            )
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
